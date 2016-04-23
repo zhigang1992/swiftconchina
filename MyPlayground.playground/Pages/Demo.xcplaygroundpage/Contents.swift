@@ -5,3 +5,7 @@ struct Todo {
     let name: String
     let completed: Bool
 }
+
+enum Action {
+    case AddTodo(String)
+}
