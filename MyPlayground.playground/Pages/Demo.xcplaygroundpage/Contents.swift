@@ -25,8 +25,16 @@ let toggleTodo: ([Todo], Action) -> [Todo] = { todos, action in
     })
 }
 
+func mergeReducer<S, A>(reducers: ((S, A)->S)... ) -> (S, A) -> S {
+    return { s, a in
+        reducers.reduce(s, combine: {$1($0, a)})
+    }
+}
+
+let todoReducer = mergeReducer(addTodo, toggleTodo)
+
 var state = [Todo]()
-state = addTodo(state, .AddTodo("Hello"))
+state = todoReducer(state, .AddTodo("Hello"))
 print(state)
-state = toggleTodo(state, .Toggle(0))
+state = todoReducer(state, .Toggle(0))
 print(state)
