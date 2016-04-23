@@ -44,6 +44,19 @@ class Store<State, Action> {
         self.reducer = reducer
     }
     
-    // Dispatch Actions
+    func dispatch(action: Action) {
+        self.state = self.reducer(self.state, action)
+    }
+    
     // Subscription
 }
+
+let store = Store(state: [Todo](), reducer: todoReducer)
+
+print(store.state)
+store.dispatch(.AddTodo("Hello"))
+print(store.state)
+store.dispatch(.AddTodo("World"))
+print(store.state)
+
+
