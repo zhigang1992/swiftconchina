@@ -277,6 +277,26 @@ Slides.Title("State, Action -> State", subtitle: "Reducer").render()
 
 
 
+Slides.Title("Reducer and State Container",subtitle: "Store").render()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -414,10 +434,10 @@ Slides.List("Pros and Cons", items: [
 
 
 Slides.List("Kens", items: [
-    "Animations",
+    "Animations & Routing",
     "Sometimes Fighting Against the Frameworks",
-    "Possible Performance Impact",
-    "Lack of Virtual DOM from React"
+    "Lack of Virtual DOM from React",
+    "..."
 ]).render()
 
 
@@ -471,7 +491,9 @@ Slides.List("Kens", items: [
 
 
 //: ![TimeTravel](timetravel.mp4)
-
+// State Time Travel
+// Free offline mode
+// Free state recovery
 
 
 
@@ -495,6 +517,14 @@ Slides.List("Kens", items: [
 
 
 谢谢
+
+
+
+
+
+
+
+
 
 
 
