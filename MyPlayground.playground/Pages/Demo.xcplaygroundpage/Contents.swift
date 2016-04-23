@@ -5,9 +5,21 @@ struct Todo {
     let completed: Bool
 }
 
+enum Visibility {
+    case Active
+    case Completed
+    case All
+}
+
+struct TodoApp {
+    let todos: [Todo]
+    let visibility: Visibility
+}
+
 enum Action {
     case AddTodo(String)
     case Toggle(Int)
+    case SetVisibility(Visibility)
 }
 
 //: ### Reducers
@@ -27,6 +39,15 @@ let toggleTodo: ([Todo], Action) -> [Todo] = { todos, action in
 
 let todoReducer = mergeReducer(addTodo, toggleTodo)
 
+let visibilityReducer: (Visibility, Action) -> Visibility = { s, a in
+    guard case .SetVisibility(let v) = a else { return s }
+    return v
+}
+
+let appReducer: (TodoApp, Action) -> TodoApp = { s, a in
+    // How to combine reducers?
+    
+}
 //: ### Store
 let store = Store(state: [Todo](), reducer: todoReducer)
 _ = store.subscribe({
