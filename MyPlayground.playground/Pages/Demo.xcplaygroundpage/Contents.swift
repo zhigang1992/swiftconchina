@@ -33,8 +33,10 @@ func mergeReducer<S, A>(reducers: ((S, A)->S)... ) -> (S, A) -> S {
 
 let todoReducer = mergeReducer(addTodo, toggleTodo)
 
-var state = [Todo]()
-state = todoReducer(state, .AddTodo("Hello"))
-print(state)
-state = todoReducer(state, .Toggle(0))
-print(state)
+class Store {
+    // Initialize with Reducer and initial state
+    
+    // Accessor to state
+    // Dispatch Actions
+    // Subscription
+}
