@@ -46,17 +46,26 @@ class Store<State, Action> {
     
     func dispatch(action: Action) {
         self.state = self.reducer(self.state, action)
+        self.subscribers.forEach({$0?(self.state)})
     }
     
-    // Subscription
+    typealias Subscriber = State -> Void
+    typealias Disposable = () -> Void
+    private var subscribers: [Subscriber?] = []
+    func subscribe(subscriber: Subscriber) -> Disposable {
+        let index = subscribers.count
+        subscribers.append(subscriber)
+        return { self.subscribers[index] = nil }
+    }
 }
 
 let store = Store(state: [Todo](), reducer: todoReducer)
+_ = store.subscribe({
+    print($0)
+})
 
-print(store.state)
 store.dispatch(.AddTodo("Hello"))
-print(store.state)
 store.dispatch(.AddTodo("World"))
-print(store.state)
+store.dispatch(.Toggle(0))
 
 
