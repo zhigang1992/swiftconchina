@@ -5,7 +5,7 @@ struct Todo {
     let completed: Bool
 }
 
-enum Visibility {
+enum Visibility: Int {
     case Active
     case Completed
     case All
@@ -66,27 +66,30 @@ let store = Store(state: initialState, reducer: appReducer)
 
 
 //: ### View
-class ConsoleView {
-    var subscription: (()->Void)?
-    init() {
-        self.subscription = store.subscribe(self.render)
-    }
-    func render(app:TodoApp) {
-        print("=================")
-        print(app.displayTodos.map({"\($0.completed ? "X" : "O") \($0.name)"}).joinWithSeparator("\n"))
-        print("----\(app.visibility)------")
-        print("=================\n")
-    }
-    func fakeTargetAction() {
-        store.dispatch(.AddTodo("Hello"))
-        store.dispatch(.AddTodo("World"))
-        store.dispatch(.Toggle(0))
-        store.dispatch(.SetVisibility(.Completed))
-    }
-    deinit {
-        self.subscription?()
-    }
+extension Todo : TodoRenderable {}
+
+let todoVC = TodoViewController<Todo>(
+    selection: {
+        store.dispatch(.Toggle($0.id))
+    }, newTodo: {
+        store.dispatch(.AddTodo($0))
+    }, visibilityChanged: {
+        if let v = Visibility(rawValue: $0) {
+            store.dispatch(.SetVisibility(v))
+        }
+})
+
+func render(state: TodoApp) {
+    todoVC.items = state.displayTodos
+    todoVC.visibility.selectedSegmentIndex = state.visibility.rawValue
 }
 
-ConsoleView().fakeTargetAction()
+store.subscribe(render)
+render(store.state)
+
+import UIKit
+import XCPlayground
+todoVC.view.frame = CGRect(x: 0, y: 0, width: 320, height: 500)
+XCPlaygroundPage.currentPage.liveView = todoVC.view
+XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
 
