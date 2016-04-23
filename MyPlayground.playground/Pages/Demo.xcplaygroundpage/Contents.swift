@@ -16,6 +16,16 @@ struct TodoApp {
     let visibility: Visibility
 }
 
+extension TodoApp {
+    var displayTodos: [Todo] {
+        switch self.visibility {
+        case .All: return self.todos
+        case .Active: return self.todos.filter({!$0.completed})
+        case .Completed: return self.todos.filter({$0.completed})
+        }
+    }
+}
+
 enum Action {
     case AddTodo(String)
     case Toggle(Int)
@@ -45,17 +55,38 @@ let visibilityReducer: (Visibility, Action) -> Visibility = { s, a in
 }
 
 let appReducer: (TodoApp, Action) -> TodoApp = { s, a in
-    // How to combine reducers?
-    
+    return TodoApp(
+        todos: todoReducer(s.todos, a),
+        visibility: visibilityReducer(s.visibility, a)
+    )
 }
 //: ### Store
-let store = Store(state: [Todo](), reducer: todoReducer)
-_ = store.subscribe({
-    print($0)
-})
+let initialState = TodoApp(todos: [], visibility: .Active)
+let store = Store(state: initialState, reducer: appReducer)
 
-store.dispatch(.AddTodo("Hello"))
-store.dispatch(.AddTodo("World"))
-store.dispatch(.Toggle(0))
 
+//: ### View
+class ConsoleView {
+    var subscription: (()->Void)?
+    init() {
+        self.subscription = store.subscribe(self.render)
+    }
+    func render(app:TodoApp) {
+        print("=================")
+        print(app.displayTodos.map({"\($0.completed ? "X" : "O") \($0.name)"}).joinWithSeparator("\n"))
+        print("----\(app.visibility)------")
+        print("=================\n")
+    }
+    func fakeTargetAction() {
+        store.dispatch(.AddTodo("Hello"))
+        store.dispatch(.AddTodo("World"))
+        store.dispatch(.Toggle(0))
+        store.dispatch(.SetVisibility(.Completed))
+    }
+    deinit {
+        self.subscription?()
+    }
+}
+
+ConsoleView().fakeTargetAction()
 
