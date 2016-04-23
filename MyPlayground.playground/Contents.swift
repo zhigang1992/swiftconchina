@@ -24,6 +24,7 @@ Slides.Title("Redux in Swift".uppercaseString, subtitle: "iOS Architech").render
 
 
 
+
 Slides.Image("MVC").render()
 
 
@@ -102,6 +103,10 @@ Slides.Image("MVVM").render()
 
 
 
+
+
+
+
 Slides.Image("VIPER").render()
 
 
@@ -126,7 +131,16 @@ Slides.Image("VIPER").render()
 
 
 
+
+
+
+
+
 Slides.Image("Redux").render()
+
+
+
+
 
 
 

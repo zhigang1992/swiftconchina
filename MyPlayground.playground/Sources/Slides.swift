@@ -36,6 +36,18 @@ let subtitleLabelStyle: UILabel -> UILabel = { l in
     return l
 }
 
+let listTitleStyle: UILabel -> UILabel = { l in
+    l.textColor = UIColor(0x34A5DA)
+    l.font = UIFont.boldSystemFontOfSize(56)
+    return l
+}
+
+let listContentStyle: UILabel -> UILabel = { l in
+    l.textColor = UIColor(0x838787)
+    l.font = UIFont.systemFontOfSize(34)
+    return l
+}
+
 func useTitle(text: String) -> UILabel -> UILabel {
     return { l in
         l.text = text
@@ -64,6 +76,15 @@ func useBackgroundColor(color: UIColor ) -> UIView -> UIView {
     }
 }
 
+func useLines(lines: Int) -> UILabel -> UILabel {
+    return {
+        $0.numberOfLines = lines
+        return $0
+    }
+}
+
+let useMultipleLines = useLines(0)
+
 public struct Slides {
     public let render: () -> UIView
     
@@ -82,7 +103,7 @@ public struct Slides {
             let view = master()
             view.addSubview(
                 UILabel(frame: CGRect(x: 40, y: 508, width: 940, height: 150))
-                    |> titleLabelStyle <+> useTitle(text.uppercaseString)
+                    |> titleLabelStyle <+> useTitle(text)
             )
             view.addSubview(
                 UIView(frame: CGRect(x: 30, y: 480, width: 960, height: 3))
@@ -112,6 +133,15 @@ public struct Slides {
             view.addSubview(
                 UIView(frame: CGRect(x: 30, y: 78, width: 960, height: 3))
                     |> useBackgroundColor(UIColor(0xA6AAA9))
+            )
+            view.addSubview(
+                UILabel(frame: CGRect(x: 30, y: 122, width: 960, height: 60))
+                    |> useTitle(title) <+> listTitleStyle
+            )
+            let itemsText = items.map({"• \($0)"}).joinWithSeparator("\n\n")
+            view.addSubview(
+                UILabel(frame: CGRect(x: 30, y: 208, width: 960, height: 500))
+                    |> useTitle(itemsText) <+> listContentStyle <+> useMultipleLines
             )
             return view
         }
